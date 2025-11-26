@@ -2,7 +2,19 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Globe, Smartphone } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 
 interface Campaign {
   id: string;
@@ -57,7 +69,7 @@ interface CampaignAudienceTabProps {
   platforms: PlatformData[];
 }
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c', '#ff69b4', '#4169e1'];
+const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a4de6c", "#ff69b4", "#4169e1"];
 
 export function CampaignAudienceTab({
   campaign,
@@ -67,37 +79,37 @@ export function CampaignAudienceTab({
   devices,
   platforms,
 }: CampaignAudienceTabProps) {
-  
   // Processar dados demográficos por idade
-  const ageData = demographics.reduce((acc: any[], item) => {
-    if (item.age) {
-      const existing = acc.find(a => a.name === item.age);
-      const impressions = parseInt(item.impressions || "0");
-      
-      if (existing) {
-        existing.value += impressions;
-      } else {
-        acc.push({
-          name: item.age,
-          value: impressions,
-        });
+  const ageData = demographics
+    .reduce((acc: any[], item) => {
+      if (item.age) {
+        const existing = acc.find((a) => a.name === item.age);
+        const impressions = parseInt(item.impressions || "0");
+
+        if (existing) {
+          existing.value += impressions;
+        } else {
+          acc.push({
+            name: item.age,
+            value: impressions,
+          });
+        }
       }
-    }
-    return acc;
-  }, []).sort((a, b) => b.value - a.value);
+      return acc;
+    }, [])
+    .sort((a, b) => b.value - a.value);
 
   // Processar dados demográficos por gênero
   const genderData = demographics.reduce((acc: any[], item) => {
     if (item.gender) {
-      const existing = acc.find(g => g.name === item.gender);
+      const existing = acc.find((g) => g.name === item.gender);
       const impressions = parseInt(item.impressions || "0");
-      
+
       if (existing) {
         existing.value += impressions;
       } else {
-        const genderLabel = item.gender === 'male' ? 'Masculino' : 
-                           item.gender === 'female' ? 'Feminino' : 
-                           'Não especificado';
+        const genderLabel =
+          item.gender === "male" ? "Masculino" : item.gender === "female" ? "Feminino" : "Não especificado";
         acc.push({
           name: genderLabel,
           value: impressions,
@@ -109,8 +121,8 @@ export function CampaignAudienceTab({
 
   // Processar dados geográficos
   const locationData = geographics
-    .map(item => ({
-      country: item.country || 'Desconhecido',
+    .map((item) => ({
+      country: item.country || "Desconhecido",
       impressions: parseInt(item.impressions || "0"),
       reach: parseInt(item.reach || "0"),
     }))
@@ -120,39 +132,53 @@ export function CampaignAudienceTab({
   const totalImpressions = locationData.reduce((sum, item) => sum + item.impressions, 0);
 
   // Processar dados de dispositivos
-  const deviceData = devices.map(item => {
-    const platform = item.device_platform || 'unknown';
-    const deviceLabel = platform === 'mobile' ? 'Mobile' :
-                       platform === 'desktop' ? 'Desktop' :
-                       platform === 'tablet' ? 'Tablet' : platform;
-    
-    return {
-      name: deviceLabel,
-      value: parseInt(item.impressions || "0"),
-    };
-  }).filter(item => item.value > 0);
+  const deviceData = devices
+    .map((item) => {
+      const platform = item.device_platform || "unknown";
+      const deviceLabel =
+        platform === "mobile"
+          ? "Mobile"
+          : platform === "desktop"
+            ? "Desktop"
+            : platform === "tablet"
+              ? "Tablet"
+              : platform;
+
+      return {
+        name: deviceLabel,
+        value: parseInt(item.impressions || "0"),
+      };
+    })
+    .filter((item) => item.value > 0);
 
   // Processar dados de plataformas
-  const platformData = platforms.map(item => {
-    const platform = item.publisher_platform || 'unknown';
-    const platformLabel = platform === 'facebook' ? 'Facebook' :
-                         platform === 'instagram' ? 'Instagram' :
-                         platform === 'audience_network' ? 'Audience Network' :
-                         platform === 'messenger' ? 'Messenger' : platform;
-    
-    return {
-      platform: platformLabel,
-      impressions: parseInt(item.impressions || "0"),
-      percentage: 0, // Será calculado depois
-    };
-  }).filter(item => item.impressions > 0);
+  const platformData = platforms
+    .map((item) => {
+      const platform = item.publisher_platform || "unknown";
+      const platformLabel =
+        platform === "facebook"
+          ? "Facebook"
+          : platform === "instagram"
+            ? "Instagram"
+            : platform === "audience_network"
+              ? "Audience Network"
+              : platform === "messenger"
+                ? "Messenger"
+                : platform;
+
+      return {
+        platform: platformLabel,
+        impressions: parseInt(item.impressions || "0"),
+        percentage: 0, // Será calculado depois
+      };
+    })
+    .filter((item) => item.impressions > 0);
 
   // Calcular porcentagens
   const totalPlatformImpressions = platformData.reduce((sum, item) => sum + item.impressions, 0);
-  platformData.forEach(item => {
-    item.percentage = totalPlatformImpressions > 0 
-      ? Math.round((item.impressions / totalPlatformImpressions) * 100)
-      : 0;
+  platformData.forEach((item) => {
+    item.percentage =
+      totalPlatformImpressions > 0 ? Math.round((item.impressions / totalPlatformImpressions) * 100) : 0;
   });
 
   const hasData = demographics.length > 0 || geographics.length > 0 || devices.length > 0 || platforms.length > 0;
@@ -167,8 +193,9 @@ export function CampaignAudienceTab({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Os dados demográficos podem levar algum tempo para serem processados pela Meta ou podem não estar disponíveis para campanhas recentes.
+          <p className="text-muted-foreground text-sm">
+            Os dados demográficos podem levar algum tempo para serem processados pela Meta ou podem não estar
+            disponíveis para campanhas recentes.
           </p>
         </CardContent>
       </Card>
@@ -184,35 +211,27 @@ export function CampaignAudienceTab({
             <Users className="h-5 w-5" />
             Resumo de Alcance
           </CardTitle>
-          <CardDescription>
-            Quantas pessoas únicas viram seus anúncios
-          </CardDescription>
+          <CardDescription>Quantas pessoas únicas viram seus anúncios</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-1">Alcance Total</p>
+              <p className="text-muted-foreground mb-1 text-sm">Alcance Total</p>
               <p className="text-3xl font-bold">
-                {insights?.reach
-                  ? parseInt(insights.reach).toLocaleString("pt-BR")
-                  : "0"}
+                {insights?.reach ? parseInt(insights.reach).toLocaleString("pt-BR") : "0"}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-1">Impressões</p>
+              <p className="text-muted-foreground mb-1 text-sm">Impressões</p>
               <p className="text-3xl font-bold">
-                {insights?.impressions
-                  ? parseInt(insights.impressions).toLocaleString("pt-BR")
-                  : "0"}
+                {insights?.impressions ? parseInt(insights.impressions).toLocaleString("pt-BR") : "0"}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-1">Frequência Média</p>
+              <p className="text-muted-foreground mb-1 text-sm">Frequência Média</p>
               <p className="text-3xl font-bold">
                 {insights?.impressions && insights?.reach
-                  ? (
-                      parseInt(insights.impressions) / parseInt(insights.reach)
-                    ).toFixed(2)
+                  ? (parseInt(insights.impressions) / parseInt(insights.reach)).toFixed(2)
                   : "0"}
               </p>
             </div>
@@ -237,9 +256,7 @@ export function CampaignAudienceTab({
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) =>
-                        `${name}: ${(percent * 100).toFixed(0)}%`
-                      }
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
@@ -269,9 +286,7 @@ export function CampaignAudienceTab({
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) =>
-                        `${name}: ${(percent * 100).toFixed(0)}%`
-                      }
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
@@ -297,30 +312,24 @@ export function CampaignAudienceTab({
               <Globe className="h-5 w-5" />
               Principais Localizações
             </CardTitle>
-            <CardDescription>
-              Países com maior alcance da campanha
-            </CardDescription>
+            <CardDescription>Países com maior alcance da campanha</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {locationData.map((location, index) => {
-                const percentage = totalImpressions > 0 
-                  ? Math.round((location.impressions / totalImpressions) * 100)
-                  : 0;
-                
+                const percentage =
+                  totalImpressions > 0 ? Math.round((location.impressions / totalImpressions) * 100) : 0;
+
                 return (
                   <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">{location.country}</span>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-muted-foreground text-sm">
                         {percentage}% ({location.impressions.toLocaleString("pt-BR")} impressões)
                       </span>
                     </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div
-                        className="bg-primary h-2 rounded-full transition-all"
-                        style={{ width: `${percentage}%` }}
-                      />
+                    <div className="bg-secondary h-2 w-full rounded-full">
+                      <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${percentage}%` }} />
                     </div>
                   </div>
                 );
@@ -349,9 +358,7 @@ export function CampaignAudienceTab({
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     outerRadius={70}
                     fill="#8884d8"
                     dataKey="value"
@@ -377,13 +384,13 @@ export function CampaignAudienceTab({
               <div className="space-y-4">
                 {platformData.map((platform, index) => (
                   <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">{platform.platform}</span>
                       <span className="text-sm font-bold">{platform.percentage}%</span>
                     </div>
-                    <div className="w-full bg-secondary rounded-full h-2">
+                    <div className="bg-secondary h-2 w-full rounded-full">
                       <div
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all"
+                        className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
                         style={{ width: `${platform.percentage}%` }}
                       />
                     </div>

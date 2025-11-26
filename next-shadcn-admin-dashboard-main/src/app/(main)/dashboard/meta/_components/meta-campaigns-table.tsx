@@ -1,13 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +30,6 @@ interface MetaCampaignsTableProps {
 }
 
 export function MetaCampaignsTable({ campaigns }: MetaCampaignsTableProps) {
-
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
       ACTIVE: "default",
@@ -123,34 +115,28 @@ export function MetaCampaignsTable({ campaigns }: MetaCampaignsTableProps) {
                 };
 
                 // Formata CTR se vier como número decimal
-                const formattedCtr = insights.ctr && insights.ctr !== "—"
-                  ? parseFloat(insights.ctr) > 1
-                    ? `${parseFloat(insights.ctr).toFixed(2)}%`
-                    : `${(parseFloat(insights.ctr) * 100).toFixed(2)}%`
-                  : insights.ctr;
+                const formattedCtr =
+                  insights.ctr && insights.ctr !== "—"
+                    ? parseFloat(insights.ctr) > 1
+                      ? `${parseFloat(insights.ctr).toFixed(2)}%`
+                      : `${(parseFloat(insights.ctr) * 100).toFixed(2)}%`
+                    : insights.ctr;
 
                 // Calcula frequência (Impressões / Alcance)
                 const frequency =
                   insights.impressions !== "—" && insights.reach !== "—"
-                    ? (
-                        parseInt(insights.impressions || "0") /
-                        parseInt(insights.reach || "1")
-                      ).toFixed(2)
+                    ? (parseInt(insights.impressions || "0") / parseInt(insights.reach || "1")).toFixed(2)
                     : "—";
 
                 return (
                   <TableRow key={campaign.id}>
-                    <TableCell className="font-medium max-w-xs truncate">
-                      {campaign.name}
-                    </TableCell>
+                    <TableCell className="max-w-xs truncate font-medium">{campaign.name}</TableCell>
                     <TableCell>{getStatusBadge(campaign.status)}</TableCell>
                     <TableCell>{getObjectiveLabel(campaign.objective)}</TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium">
-                          {formatBudget(campaign.daily_budget)}
-                        </span>
-                        <span className="text-xs text-muted-foreground">diário</span>
+                        <span className="text-sm font-medium">{formatBudget(campaign.daily_budget)}</span>
+                        <span className="text-muted-foreground text-xs">diário</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -162,9 +148,7 @@ export function MetaCampaignsTable({ campaigns }: MetaCampaignsTableProps) {
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">
-                        {insights.reach === "—"
-                          ? "—"
-                          : parseInt(insights.reach || "0").toLocaleString("pt-BR")}
+                        {insights.reach === "—" ? "—" : parseInt(insights.reach || "0").toLocaleString("pt-BR")}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -172,9 +156,7 @@ export function MetaCampaignsTable({ campaigns }: MetaCampaignsTableProps) {
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">
-                        {insights.clicks === "—"
-                          ? "—"
-                          : parseInt(insights.clicks || "0").toLocaleString("pt-BR")}
+                        {insights.clicks === "—" ? "—" : parseInt(insights.clicks || "0").toLocaleString("pt-BR")}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -186,9 +168,7 @@ export function MetaCampaignsTable({ campaigns }: MetaCampaignsTableProps) {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="text-sm">
-                        {formattedCtr === "—" ? "—" : formattedCtr}
-                      </span>
+                      <span className="text-sm">{formattedCtr === "—" ? "—" : formattedCtr}</span>
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">

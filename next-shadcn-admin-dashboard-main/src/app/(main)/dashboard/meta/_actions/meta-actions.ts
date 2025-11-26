@@ -50,10 +50,7 @@ export async function getMetaCampaigns(limit: number = 25, status?: string) {
   }
 }
 
-export async function getCampaignInsights(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignInsights(campaignId: string, datePreset: string = "last_30d") {
   try {
     const insights = await metaAPIClient.getCampaignInsights(campaignId, datePreset);
 
@@ -126,10 +123,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
-export async function getCampaignDemographics(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignDemographics(campaignId: string, datePreset: string = "last_30d") {
   try {
     const data = await metaAPIClient.getCampaignDemographics(campaignId, datePreset);
     return data;
@@ -139,10 +133,7 @@ export async function getCampaignDemographics(
   }
 }
 
-export async function getCampaignGeographics(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignGeographics(campaignId: string, datePreset: string = "last_30d") {
   try {
     const data = await metaAPIClient.getCampaignGeographics(campaignId, datePreset);
     return data;
@@ -152,10 +143,7 @@ export async function getCampaignGeographics(
   }
 }
 
-export async function getCampaignDeviceBreakdown(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignDeviceBreakdown(campaignId: string, datePreset: string = "last_30d") {
   try {
     const data = await metaAPIClient.getCampaignDeviceBreakdown(campaignId, datePreset);
     return data;
@@ -165,10 +153,7 @@ export async function getCampaignDeviceBreakdown(
   }
 }
 
-export async function getCampaignPlatformBreakdown(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignPlatformBreakdown(campaignId: string, datePreset: string = "last_30d") {
   try {
     const data = await metaAPIClient.getCampaignPlatformBreakdown(campaignId, datePreset);
     return data;

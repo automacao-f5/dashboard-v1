@@ -47,9 +47,10 @@ export function CampaignDetailsOverview({ campaign, insights }: CampaignDetailsO
     return num > 1 ? `${num.toFixed(2)}%` : `${(num * 100).toFixed(2)}%`;
   };
 
-  const frequency = insights?.impressions && insights?.reach
-    ? (parseInt(insights.impressions) / parseInt(insights.reach)).toFixed(2)
-    : "0";
+  const frequency =
+    insights?.impressions && insights?.reach
+      ? (parseInt(insights.impressions) / parseInt(insights.reach)).toFixed(2)
+      : "0";
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -60,26 +61,24 @@ export function CampaignDetailsOverview({ campaign, insights }: CampaignDetailsO
             <Eye className="h-5 w-5" />
             Métricas de Alcance
           </CardTitle>
-          <CardDescription>
-            Quantas pessoas viram seus anúncios
-          </CardDescription>
+          <CardDescription>Quantas pessoas viram seus anúncios</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Impressões</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Impressões</span>
             <span className="text-2xl font-bold">{formatNumber(insights?.impressions)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Alcance</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Alcance</span>
             <span className="text-2xl font-bold">{formatNumber(insights?.reach)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Frequência</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Frequência</span>
             <span className="text-2xl font-bold">{frequency}</span>
           </div>
-          <div className="pt-2 border-t">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">CPM</span>
+          <div className="border-t pt-2">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">CPM</span>
               <span className="text-lg font-semibold">{formatCurrency(insights?.cpm)}</span>
             </div>
           </div>
@@ -93,22 +92,20 @@ export function CampaignDetailsOverview({ campaign, insights }: CampaignDetailsO
             <MousePointerClick className="h-5 w-5" />
             Métricas de Engajamento
           </CardTitle>
-          <CardDescription>
-            Como as pessoas interagem com seus anúncios
-          </CardDescription>
+          <CardDescription>Como as pessoas interagem com seus anúncios</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Cliques</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Cliques</span>
             <span className="text-2xl font-bold">{formatNumber(insights?.clicks)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">CTR</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">CTR</span>
             <span className="text-2xl font-bold">{formatPercentage(insights?.ctr)}</span>
           </div>
-          <div className="pt-2 border-t">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">CPC</span>
+          <div className="border-t pt-2">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">CPC</span>
               <span className="text-lg font-semibold">{formatCurrency(insights?.cpc)}</span>
             </div>
           </div>
@@ -122,21 +119,19 @@ export function CampaignDetailsOverview({ campaign, insights }: CampaignDetailsO
             <TrendingUp className="h-5 w-5" />
             Resumo de Gastos
           </CardTitle>
-          <CardDescription>
-            Investimento e eficiência da campanha
-          </CardDescription>
+          <CardDescription>Investimento e eficiência da campanha</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Gasto Total</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Gasto Total</span>
             <span className="text-2xl font-bold">{formatCurrency(insights?.spend)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Custo por Clique</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Custo por Clique</span>
             <span className="text-lg font-semibold">{formatCurrency(insights?.cpc)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Custo por Mil Impressões</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Custo por Mil Impressões</span>
             <span className="text-lg font-semibold">{formatCurrency(insights?.cpm)}</span>
           </div>
         </CardContent>
@@ -149,31 +144,25 @@ export function CampaignDetailsOverview({ campaign, insights }: CampaignDetailsO
             <Users className="h-5 w-5" />
             Informações da Campanha
           </CardTitle>
-          <CardDescription>
-            Detalhes e configurações
-          </CardDescription>
+          <CardDescription>Detalhes e configurações</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Status</span>
-            <span className="text-lg font-semibold">
-              {campaign.status === "ACTIVE" ? "Ativa" : "Pausada"}
-            </span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Status</span>
+            <span className="text-lg font-semibold">{campaign.status === "ACTIVE" ? "Ativa" : "Pausada"}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Orçamento Diário</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Orçamento Diário</span>
             <span className="text-lg font-semibold">
               {campaign.daily_budget
                 ? formatCurrency((parseInt(campaign.daily_budget) / 100).toString())
                 : "Não definido"}
             </span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Data de Início</span>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground text-sm">Data de Início</span>
             <span className="text-sm">
-              {campaign.start_time
-                ? new Date(campaign.start_time).toLocaleDateString("pt-BR")
-                : "Não definida"}
+              {campaign.start_time ? new Date(campaign.start_time).toLocaleDateString("pt-BR") : "Não definida"}
             </span>
           </div>
         </CardContent>

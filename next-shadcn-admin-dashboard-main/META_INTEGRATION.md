@@ -33,6 +33,7 @@ O servidor MCP fornece três ferramentas principais:
 ### 2. Página do Dashboard (`/dashboard/meta`)
 
 Componentes:
+
 - `MetaOverviewCards`: Exibe métricas agregadas (gasto total, impressões, cliques, CTR)
 - `MetaCampaignsTable`: Lista todas as campanhas com seus detalhes
 
@@ -41,6 +42,7 @@ Componentes:
 Localização: `src/app/(main)/dashboard/meta/_actions/meta-actions.ts`
 
 Funções disponíveis:
+
 - `getMetaCampaigns(limit, status)`: Busca campanhas
 - `getCampaignInsights(campaignId, datePreset)`: Busca insights de uma campanha
 - `getAggregatedInsights()`: Calcula métricas agregadas de todas as campanhas ativas
@@ -61,12 +63,13 @@ A forma mais simples é usar o Cline (este assistente) para fazer chamadas ao se
 
 ```typescript
 // Você pode pedir ao Cline para executar:
-use_mcp_tool('meta-marketing', 'get_campaigns', { limit: 25 })
+use_mcp_tool("meta-marketing", "get_campaigns", { limit: 25 });
 ```
 
 #### Opção 2: Criar um Servidor Proxy HTTP
 
 Criar um servidor Node.js separado que:
+
 1. Mantém conexão com o servidor MCP via stdio
 2. Expõe endpoints HTTP que o Next.js pode chamar
 3. Traduz as requisições HTTP para chamadas MCP
@@ -75,13 +78,13 @@ Exemplo de estrutura:
 
 ```javascript
 // proxy-server.js
-import express from 'express';
-import { spawn } from 'child_process';
+import express from "express";
+import { spawn } from "child_process";
 
 const app = express();
-const mcpProcess = spawn('node', ['path/to/meta-marketing-server/build/index.js']);
+const mcpProcess = spawn("node", ["path/to/meta-marketing-server/build/index.js"]);
 
-app.post('/api/mcp/:tool', async (req, res) => {
+app.post("/api/mcp/:tool", async (req, res) => {
   // Envia comando para o processo MCP
   // Aguarda resposta
   // Retorna para o cliente
@@ -95,22 +98,22 @@ app.listen(3002);
 Modificar o `mcp-client.ts` para fazer chamadas diretas à API do Meta:
 
 ```typescript
-import axios from 'axios';
+import axios from "axios";
 
 const META_API = axios.create({
-  baseURL: 'https://graph.facebook.com/v21.0',
+  baseURL: "https://graph.facebook.com/v21.0",
   params: {
-    access_token: process.env.META_ACCESS_TOKEN
-  }
+    access_token: process.env.META_ACCESS_TOKEN,
+  },
 });
 
 export async function callMCPTool(serverName, toolName, args) {
-  if (toolName === 'get_campaigns') {
+  if (toolName === "get_campaigns") {
     const response = await META_API.get(`/${process.env.META_AD_ACCOUNT_ID}/campaigns`, {
       params: {
-        fields: 'id,name,status,objective,daily_budget,start_time',
-        limit: args.limit
-      }
+        fields: "id,name,status,objective,daily_budget,start_time",
+        limit: args.limit,
+      },
     });
     return response.data;
   }
@@ -174,6 +177,7 @@ Para ter dados 100% em tempo real no dashboard:
 ## Credenciais
 
 As credenciais estão configuradas no arquivo MCP settings:
+
 - **Access Token**: Configurado
 - **Ad Account ID**: act_748894959735898
 
@@ -182,5 +186,6 @@ As credenciais estão configuradas no arquivo MCP settings:
 ## Suporte
 
 Para dúvidas sobre a integração, consulte:
+
 - [Meta Marketing API Docs](https://developers.facebook.com/docs/marketing-apis)
 - [MCP Documentation](https://modelcontextprotocol.io)

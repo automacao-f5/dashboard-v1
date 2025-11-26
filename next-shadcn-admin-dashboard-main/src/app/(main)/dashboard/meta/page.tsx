@@ -3,10 +3,7 @@ import { MetaDashboardClient } from "./_components/meta-dashboard-client";
 
 export default async function MetaPage() {
   // Busca dados do servidor
-  const [campaignsData, insightsData] = await Promise.all([
-    getMetaCampaigns(50),
-    getAggregatedInsights(),
-  ]);
+  const [campaignsData, insightsData] = await Promise.all([getMetaCampaigns(50), getAggregatedInsights()]);
 
   // Busca insights para cada campanha ativa
   const campaignsWithInsights = await Promise.all(
@@ -24,13 +21,8 @@ export default async function MetaPage() {
         }
       }
       return campaign;
-    })
+    }),
   );
 
-  return (
-    <MetaDashboardClient
-      initialCampaigns={campaignsWithInsights}
-      initialInsights={insightsData}
-    />
-  );
+  return <MetaDashboardClient initialCampaigns={campaignsWithInsights} initialInsights={insightsData} />;
 }

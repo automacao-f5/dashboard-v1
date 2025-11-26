@@ -58,9 +58,7 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
     async function fetchDailyInsights() {
       try {
         setLoading(true);
-        const response = await fetch(
-          `/api/meta/campaigns/${campaign.id}/insights?date_preset=last_7d`
-        );
+        const response = await fetch(`/api/meta/campaigns/${campaign.id}/insights?date_preset=last_7d`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar insights diários");
@@ -107,8 +105,8 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -117,7 +115,7 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
     return (
       <Card>
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">{error}</p>
+          <p className="text-muted-foreground text-center">{error}</p>
         </CardContent>
       </Card>
     );
@@ -138,42 +136,33 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
         </CardHeader>
         <CardContent>
           {performanceData.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              Nenhum dado disponível para o período selecionado
-            </p>
+            <p className="text-muted-foreground py-8 text-center">Nenhum dado disponível para o período selecionado</p>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Legend />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="impressions"
-                stroke="#8884d8"
-                name="Impressões"
-                strokeWidth={2}
-              />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="clicks"
-                stroke="#82ca9d"
-                name="Cliques"
-                strokeWidth={2}
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="spend"
-                stroke="#ffc658"
-                name="Gasto (R$)"
-                strokeWidth={2}
-              />
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
+                <Tooltip />
+                <Legend />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="impressions"
+                  stroke="#8884d8"
+                  name="Impressões"
+                  strokeWidth={2}
+                />
+                <Line yAxisId="left" type="monotone" dataKey="clicks" stroke="#82ca9d" name="Cliques" strokeWidth={2} />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="spend"
+                  stroke="#ffc658"
+                  name="Gasto (R$)"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           )}
@@ -188,9 +177,7 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
               <BarChart3 className="h-5 w-5" />
               Comparação com Média do Setor
             </CardTitle>
-            <CardDescription>
-              Como sua campanha se compara com a média
-            </CardDescription>
+            <CardDescription>Como sua campanha se compara com a média</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -214,21 +201,17 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
               <Activity className="h-5 w-5" />
               Métricas de Eficiência
             </CardTitle>
-            <CardDescription>
-              Indicadores de performance da campanha
-            </CardDescription>
+            <CardDescription>Indicadores de performance da campanha</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium">Taxa de Cliques (CTR)</span>
                 <span className="text-sm font-bold">
-                  {insights?.ctr
-                    ? `${parseFloat(insights.ctr).toFixed(2)}%`
-                    : "0%"}
+                  {insights?.ctr ? `${parseFloat(insights.ctr).toFixed(2)}%` : "0%"}
                 </span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
+              <div className="bg-secondary h-2 w-full rounded-full">
                 <div
                   className="bg-primary h-2 rounded-full"
                   style={{
@@ -236,49 +219,39 @@ export function CampaignPerformanceTab({ campaign, insights }: CampaignPerforman
                   }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Meta: 5% | Média do setor: 5.2%
-              </p>
+              <p className="text-muted-foreground mt-1 text-xs">Meta: 5% | Média do setor: 5.2%</p>
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium">Custo por Clique</span>
-                <span className="text-sm font-bold">
-                  {formatCurrency(parseFloat(insights?.cpc || "0"))}
-                </span>
+                <span className="text-sm font-bold">{formatCurrency(parseFloat(insights?.cpc || "0"))}</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
+              <div className="bg-secondary h-2 w-full rounded-full">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="h-2 rounded-full bg-green-500"
                   style={{
                     width: `${Math.min((parseFloat(insights?.cpc || "0") / 0.5) * 100, 100)}%`,
                   }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Meta: R$ 0,20 | Média do setor: R$ 0,15
-              </p>
+              <p className="text-muted-foreground mt-1 text-xs">Meta: R$ 0,20 | Média do setor: R$ 0,15</p>
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium">Custo por Mil Impressões</span>
-                <span className="text-sm font-bold">
-                  {formatCurrency(parseFloat(insights?.cpm || "0"))}
-                </span>
+                <span className="text-sm font-bold">{formatCurrency(parseFloat(insights?.cpm || "0"))}</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-2">
+              <div className="bg-secondary h-2 w-full rounded-full">
                 <div
-                  className="bg-blue-500 h-2 rounded-full"
+                  className="h-2 rounded-full bg-blue-500"
                   style={{
                     width: `${Math.min((parseFloat(insights?.cpm || "0") / 20) * 100, 100)}%`,
                   }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Meta: R$ 10,00 | Média do setor: R$ 8,50
-              </p>
+              <p className="text-muted-foreground mt-1 text-xs">Meta: R$ 10,00 | Média do setor: R$ 8,50</p>
             </div>
           </CardContent>
         </Card>

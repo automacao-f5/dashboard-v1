@@ -26,10 +26,10 @@ interface PageProps {
 export default async function CampaignDetailsPage({ params }: PageProps) {
   // Await params antes de usar (Next.js 15+)
   const { id } = await params;
-  
+
   // Busca todas as campanhas
   const campaignsData = await getMetaCampaigns(100);
-  
+
   // Encontra a campanha específica
   const campaign = campaignsData.campaigns.find((c) => c.id === id);
 
@@ -110,13 +110,11 @@ export default async function CampaignDetailsPage({ params }: PageProps) {
 
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="mb-2 flex items-center gap-2">
               <h1 className="text-3xl font-bold tracking-tight">{campaign.name}</h1>
               {getStatusBadge(campaign.status)}
             </div>
-            <p className="text-muted-foreground">
-              ID da Campanha: {campaign.id}
-            </p>
+            <p className="text-muted-foreground">ID da Campanha: {campaign.id}</p>
           </div>
         </div>
       </div>
@@ -126,7 +124,7 @@ export default async function CampaignDetailsPage({ params }: PageProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Objetivo</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{getObjectiveLabel(campaign.objective)}</div>
@@ -136,7 +134,7 @@ export default async function CampaignDetailsPage({ params }: PageProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Orçamento Diário</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatBudget(campaign.daily_budget)}</div>
@@ -146,7 +144,7 @@ export default async function CampaignDetailsPage({ params }: PageProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Gasto Total</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -163,7 +161,7 @@ export default async function CampaignDetailsPage({ params }: PageProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Data de Início</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-lg font-bold">{formatDate(campaign.start_time)}</div>

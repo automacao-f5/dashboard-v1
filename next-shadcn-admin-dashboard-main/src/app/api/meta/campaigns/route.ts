@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMetaCampaigns, getCampaignInsights, getAggregatedInsights } from "@/app/(main)/dashboard/meta/_actions/meta-actions";
+import {
+  getMetaCampaigns,
+  getCampaignInsights,
+  getAggregatedInsights,
+} from "@/app/(main)/dashboard/meta/_actions/meta-actions";
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +31,7 @@ export async function GET(request: NextRequest) {
           }
         }
         return campaign;
-      })
+      }),
     );
 
     // Busca insights agregados
@@ -40,9 +44,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in campaigns API:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch campaigns" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch campaigns" }, { status: 500 });
   }
 }

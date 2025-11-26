@@ -16,18 +16,22 @@ Este documento explica como configurar a integração direta com a Meta Marketin
 ### 1. Obter Credenciais da Meta
 
 #### Passo 1: Criar App no Meta for Developers
+
 1. Acesse https://developers.facebook.com/
 2. Vá em "Meus Apps" > "Criar App"
 3. Escolha "Empresa" como tipo de app
 4. Preencha os detalhes do app
 
 #### Passo 2: Configurar Permissões
+
 Adicione as seguintes permissões ao seu app:
+
 - `ads_read` - Ler dados de anúncios
 - `ads_management` - Gerenciar campanhas (se necessário)
 - `business_management` - Gerenciar conta comercial
 
 #### Passo 3: Gerar Access Token
+
 1. Vá em "Ferramentas" > "Graph API Explorer"
 2. Selecione seu app
 3. Adicione as permissões necessárias
@@ -35,6 +39,7 @@ Adicione as seguintes permissões ao seu app:
 5. **IMPORTANTE**: Para produção, use um **System User Token** que não expira
 
 #### Passo 4: Obter Ad Account ID
+
 1. Acesse https://business.facebook.com/
 2. Vá em "Configurações da Empresa" > "Contas de Anúncios"
 3. Copie o ID da conta (formato: `act_XXXXXXXXXX`)
@@ -58,17 +63,17 @@ NEXT_PUBLIC_META_API_URL=https://graph.facebook.com
 Crie o arquivo `src/lib/meta-api-client.ts`:
 
 ```typescript
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
 class MetaAPIClient {
   private client: AxiosInstance;
 
   constructor() {
     const accessToken = process.env.META_ACCESS_TOKEN;
-    const apiVersion = process.env.META_API_VERSION || 'v21.0';
+    const apiVersion = process.env.META_API_VERSION || "v21.0";
 
     if (!accessToken) {
-      throw new Error('META_ACCESS_TOKEN não configurado');
+      throw new Error("META_ACCESS_TOKEN não configurado");
     }
 
     this.client = axios.create({
@@ -82,16 +87,14 @@ class MetaAPIClient {
   // Buscar campanhas
   async getCampaigns(limit: number = 25, status?: string) {
     const adAccountId = process.env.META_AD_ACCOUNT_ID;
-    
+
     const params: any = {
-      fields: 'id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time',
+      fields: "id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time",
       limit,
     };
 
     if (status) {
-      params.filtering = JSON.stringify([
-        { field: 'status', operator: 'IN', value: [status] },
-      ]);
+      params.filtering = JSON.stringify([{ field: "status", operator: "IN", value: [status] }]);
     }
 
     const response = await this.client.get(`/${adAccountId}/campaigns`, { params });
@@ -99,10 +102,10 @@ class MetaAPIClient {
   }
 
   // Buscar insights de campanha
-  async getCampaignInsights(campaignId: string, datePreset: string = 'last_7d') {
+  async getCampaignInsights(campaignId: string, datePreset: string = "last_7d") {
     const response = await this.client.get(`/${campaignId}/insights`, {
       params: {
-        fields: 'impressions,clicks,spend,reach,cpc,cpm,ctr',
+        fields: "impressions,clicks,spend,reach,cpc,cpm,ctr",
         date_preset: datePreset,
       },
     });
@@ -111,10 +114,10 @@ class MetaAPIClient {
   }
 
   // Buscar insights com breakdown diário
-  async getCampaignInsightsBreakdown(campaignId: string, datePreset: string = 'last_7d') {
+  async getCampaignInsightsBreakdown(campaignId: string, datePreset: string = "last_7d") {
     const response = await this.client.get(`/${campaignId}/insights`, {
       params: {
-        fields: 'impressions,clicks,spend,reach,cpc,cpm,ctr,date_start,date_stop',
+        fields: "impressions,clicks,spend,reach,cpc,cpm,ctr,date_start,date_stop",
         date_preset: datePreset,
         time_increment: 1, // Breakdown diário
       },
@@ -139,7 +142,7 @@ import { metaAPIClient } from "@/lib/meta-api-client";
 export async function getMetaCampaigns(limit: number = 25, status?: string) {
   try {
     const data = await metaAPIClient.getCampaigns(limit, status);
-    
+
     return {
       ad_account_id: process.env.META_AD_ACCOUNT_ID,
       total_campaigns: data.data?.length || 0,
@@ -151,13 +154,10 @@ export async function getMetaCampaigns(limit: number = 25, status?: string) {
   }
 }
 
-export async function getCampaignInsights(
-  campaignId: string,
-  datePreset: string = "last_30d"
-) {
+export async function getCampaignInsights(campaignId: string, datePreset: string = "last_30d") {
   try {
     const insights = await metaAPIClient.getCampaignInsights(campaignId, datePreset);
-    
+
     return {
       campaign_id: campaignId,
       date_preset: datePreset,
@@ -214,7 +214,7 @@ Configure as variáveis de ambiente no painel de controle da plataforma ou via C
 ### Exemplo de Rate Limiting
 
 ```typescript
-import { LRUCache } from 'lru-cache';
+import { LRUCache } from "lru-cache";
 
 const cache = new LRUCache({
   max: 500,
@@ -223,15 +223,15 @@ const cache = new LRUCache({
 
 export async function getCachedCampaigns(limit: number = 25) {
   const cacheKey = `campaigns_${limit}`;
-  
+
   const cached = cache.get(cacheKey);
   if (cached) {
     return cached;
   }
-  
+
   const data = await metaAPIClient.getCampaigns(limit);
   cache.set(cacheKey, data);
-  
+
   return data;
 }
 ```
@@ -239,6 +239,7 @@ export async function getCachedCampaigns(limit: number = 25) {
 ## 📊 Métricas Disponíveis
 
 ### Métricas Básicas (já implementadas)
+
 - `impressions` - Impressões
 - `clicks` - Cliques
 - `spend` - Gasto
@@ -248,6 +249,7 @@ export async function getCachedCampaigns(limit: number = 25) {
 - `ctr` - Taxa de Cliques
 
 ### Métricas Avançadas (disponíveis na API)
+
 - `actions` - Ações realizadas
 - `conversions` - Conversões
 - `cost_per_action_type` - Custo por tipo de ação
@@ -260,15 +262,18 @@ Para adicionar mais métricas, basta incluí-las no parâmetro `fields` das requ
 ## 🐛 Troubleshooting
 
 ### Erro: "Invalid OAuth access token"
+
 - Verifique se o token está correto
 - Confirme se o token tem as permissões necessárias
 - Verifique se o token não expirou
 
 ### Erro: "Unsupported get request"
+
 - Verifique se o Ad Account ID está correto
 - Confirme se o formato é `act_XXXXXXXXXX`
 
 ### Erro: "Rate limit exceeded"
+
 - Implemente cache
 - Reduza a frequência de requisições
 - Use batch requests quando possível

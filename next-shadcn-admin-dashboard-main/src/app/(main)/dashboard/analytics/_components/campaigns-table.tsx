@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpCircle, PauseCircle, AlertCircle } from "lucide-react";
@@ -66,9 +59,7 @@ export function CampaignsTable({ data }: CampaignsTableProps) {
     <Card className="col-span-full">
       <CardHeader>
         <CardTitle>Performance por Campanha</CardTitle>
-        <CardDescription>
-          Análise comparativa de campanhas com recomendações de otimização
-        </CardDescription>
+        <CardDescription>Análise comparativa de campanhas com recomendações de otimização</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md border">
@@ -89,7 +80,7 @@ export function CampaignsTable({ data }: CampaignsTableProps) {
             <TableBody>
               {data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="text-muted-foreground text-center">
                     Nenhuma campanha encontrada
                   </TableCell>
                 </TableRow>
@@ -99,26 +90,16 @@ export function CampaignsTable({ data }: CampaignsTableProps) {
 
                   return (
                     <TableRow key={campaign.id}>
-                      <TableCell className="font-medium max-w-[200px] truncate">
-                        {campaign.name}
-                      </TableCell>
+                      <TableCell className="max-w-[200px] truncate font-medium">{campaign.name}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant={campaign.status === "ACTIVE" ? "default" : "secondary"}
-                        >
+                        <Badge variant={campaign.status === "ACTIVE" ? "default" : "secondary"}>
                           {campaign.status === "ACTIVE" ? "Ativa" : "Pausada"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(campaign.spend)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {formatNumber(campaign.clicks)}
-                      </TableCell>
+                      <TableCell className="text-right">{formatCurrency(campaign.spend)}</TableCell>
+                      <TableCell className="text-right">{formatNumber(campaign.clicks)}</TableCell>
                       <TableCell className="text-right">{campaign.ctr}%</TableCell>
-                      <TableCell className="text-right font-medium">
-                        {campaign.estimatedSales}
-                      </TableCell>
+                      <TableCell className="text-right font-medium">{campaign.estimatedSales}</TableCell>
                       <TableCell className="text-right">
                         <span
                           className={`font-semibold ${
@@ -132,13 +113,11 @@ export function CampaignsTable({ data }: CampaignsTableProps) {
                           {campaign.roas.toFixed(2)}x
                         </span>
                       </TableCell>
-                      <TableCell className="text-right">
-                        {formatCurrency(campaign.cpa)}
-                      </TableCell>
+                      <TableCell className="text-right">{formatCurrency(campaign.cpa)}</TableCell>
                       <TableCell>
                         <Badge
                           variant={getRecommendationVariant(campaign.recommendationColor)}
-                          className="flex items-center gap-1 w-fit"
+                          className="flex w-fit items-center gap-1"
                         >
                           <RecommendationIcon className="h-3 w-3" />
                           {campaign.recommendation}
@@ -154,7 +133,7 @@ export function CampaignsTable({ data }: CampaignsTableProps) {
 
         {/* Legenda */}
         {data.length > 0 && (
-          <div className="mt-4 flex items-center gap-6 text-xs text-muted-foreground">
+          <div className="text-muted-foreground mt-4 flex items-center gap-6 text-xs">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-green-500" />
               <span>ROAS ≥ 3.0x: Escalar</span>

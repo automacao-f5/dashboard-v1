@@ -2,13 +2,16 @@ import { Suspense } from "react";
 import { HeroMetrics } from "./_components/hero-metrics";
 import { FunnelChart } from "./_components/funnel-chart";
 import { CampaignsTable } from "./_components/campaigns-table";
+import { VturbMetrics } from "./_components/vturb-metrics";
 import {
   getConsolidatedMetrics,
   getFunnelData,
   getCampaignsPerformance,
+  getVturbMetrics,
 } from "./_actions/analytics-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function AnalyticsPage() {
   return (
@@ -21,20 +24,41 @@ export default async function AnalyticsPage() {
         </p>
       </div>
 
-      {/* Hero Metrics */}
-      <Suspense fallback={<HeroMetricsSkeleton />}>
-        <HeroMetricsSection />
-      </Suspense>
+      {/* Tabs Navigation */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="campaigns">Campanhas</TabsTrigger>
+          <TabsTrigger value="content">Conteúdo (Vturb)</TabsTrigger>
+        </TabsList>
 
-      {/* Funnel Chart */}
-      <Suspense fallback={<FunnelChartSkeleton />}>
-        <FunnelChartSection />
-      </Suspense>
+        {/* Tab: Visão Geral */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Hero Metrics */}
+          <Suspense fallback={<HeroMetricsSkeleton />}>
+            <HeroMetricsSection />
+          </Suspense>
 
-      {/* Campaigns Table */}
-      <Suspense fallback={<CampaignsTableSkeleton />}>
-        <CampaignsTableSection />
-      </Suspense>
+          {/* Funnel Chart */}
+          <Suspense fallback={<FunnelChartSkeleton />}>
+            <FunnelChartSection />
+          </Suspense>
+        </TabsContent>
+
+        {/* Tab: Campanhas */}
+        <TabsContent value="campaigns" className="space-y-6">
+          <Suspense fallback={<CampaignsTableSkeleton />}>
+            <CampaignsTableSection />
+          </Suspense>
+        </TabsContent>
+
+        {/* Tab: Conteúdo (Vturb) */}
+        <TabsContent value="content" className="space-y-6">
+          <Suspense fallback={<VturbMetricsSkeleton />}>
+            <VturbMetricsSection />
+          </Suspense>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
@@ -54,6 +78,11 @@ async function CampaignsTableSection() {
   return <CampaignsTable data={data} />;
 }
 
+async function VturbMetricsSection() {
+  const data = await getVturbMetrics();
+  return <VturbMetrics data={data} />;
+}
+
 // Skeletons
 function HeroMetricsSkeleton() {
   return (
@@ -65,8 +94,8 @@ function HeroMetricsSkeleton() {
             <Skeleton className="h-8 w-8 rounded-full" />
           </CardHeader>
           <CardContent>
-            <Skeleton className="h-8 w-24 mb-2" />
-            <Skeleton className="h-3 w-full mb-2" />
+            <Skeleton className="mb-2 h-8 w-24" />
+            <Skeleton className="mb-2 h-3 w-full" />
             <Skeleton className="h-3 w-16" />
           </CardContent>
         </Card>
@@ -106,5 +135,24 @@ function CampaignsTableSkeleton() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function VturbMetricsSkeleton() {
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {[...Array(6)].map((_, i) => (
+        <Card key={i}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-8 w-8 rounded-full" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="mb-2 h-8 w-20" />
+            <Skeleton className="h-3 w-full" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   );
 }

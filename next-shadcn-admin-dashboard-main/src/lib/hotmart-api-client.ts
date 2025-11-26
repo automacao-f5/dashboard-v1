@@ -10,17 +10,19 @@ class HotmartAPIClient {
   private tokenExpiration: number = 0;
 
   constructor() {
-    const clientId = process.env.HOTMART_CLIENT_ID;
-    const clientSecret = process.env.HOTMART_CLIENT_SECRET;
-
-    if (!clientId || !clientSecret) {
-      throw new Error("HOTMART_CLIENT_ID ou HOTMART_CLIENT_SECRET não configurados");
-    }
-
     this.client = axios.create({
       baseURL: "https://developers.hotmart.com",
       timeout: 30000,
     });
+  }
+
+  /**
+   * Verificar se as credenciais estão configuradas
+   */
+  private hasCredentials(): boolean {
+    const clientId = process.env.HOTMART_CLIENT_ID;
+    const clientSecret = process.env.HOTMART_CLIENT_SECRET;
+    return !!(clientId && clientSecret);
   }
 
   /**
@@ -42,13 +44,13 @@ class HotmartAPIClient {
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": `Basic ${basicAuth}`,
+            Authorization: `Basic ${basicAuth}`,
           },
-        }
+        },
       );
 
       this.accessToken = response.data.access_token;
-      this.tokenExpiration = Date.now() + (response.data.expires_in * 1000);
+      this.tokenExpiration = Date.now() + response.data.expires_in * 1000;
 
       return this.accessToken;
     } catch (error) {
@@ -85,16 +87,13 @@ class HotmartAPIClient {
       if (endDate) params.end_date = endDate;
       if (productId) params.product_id = productId;
 
-      const response = await axios.get(
-        "https://developers.hotmart.com/payments/api/v1/sales/history",
-        {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          params,
-        }
-      );
+      const response = await axios.get("https://developers.hotmart.com/payments/api/v1/sales/history", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params,
+      });
 
       return response.data;
     } catch (error) {
@@ -118,16 +117,13 @@ class HotmartAPIClient {
       if (startDate) params.start_date = startDate;
       if (endDate) params.end_date = endDate;
 
-      const response = await axios.get(
-        "https://developers.hotmart.com/payments/api/v1/sales/summary",
-        {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          params,
-        }
-      );
+      const response = await axios.get("https://developers.hotmart.com/payments/api/v1/sales/summary", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params,
+      });
 
       return response.data;
     } catch (error) {
@@ -153,16 +149,13 @@ class HotmartAPIClient {
       if (status) params.status = status;
       if (productId) params.product_id = productId;
 
-      const response = await axios.get(
-        "https://developers.hotmart.com/payments/api/v1/subscriptions",
-        {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          params,
-        }
-      );
+      const response = await axios.get("https://developers.hotmart.com/payments/api/v1/subscriptions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params,
+      });
 
       return response.data;
     } catch (error) {
@@ -181,15 +174,12 @@ class HotmartAPIClient {
     try {
       const token = await this.getValidToken();
 
-      const response = await axios.get(
-        "https://developers.hotmart.com/payments/api/v1/products",
-        {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get("https://developers.hotmart.com/payments/api/v1/products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       return response.data;
     } catch (error) {
@@ -213,16 +203,13 @@ class HotmartAPIClient {
       if (startDate) params.start_date = startDate;
       if (endDate) params.end_date = endDate;
 
-      const response = await axios.get(
-        "https://developers.hotmart.com/payments/api/v1/sales/commissions",
-        {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          params,
-        }
-      );
+      const response = await axios.get("https://developers.hotmart.com/payments/api/v1/sales/commissions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params,
+      });
 
       return response.data;
     } catch (error) {
@@ -243,13 +230,12 @@ class HotmartAPIClient {
       const sales = await this.getSales(startDate, endDate, productId);
 
       const totalSales = sales.items?.length || 0;
-      const totalRevenue = sales.items?.reduce((sum: number, sale: any) => {
-        return sum + (sale.purchase?.price?.value || 0);
-      }, 0) || 0;
+      const totalRevenue =
+        sales.items?.reduce((sum: number, sale: any) => {
+          return sum + (sale.purchase?.price?.value || 0);
+        }, 0) || 0;
 
-      const approvedSales = sales.items?.filter((sale: any) =>
-        sale.purchase?.status === "APPROVED"
-      ).length || 0;
+      const approvedSales = sales.items?.filter((sale: any) => sale.purchase?.status === "APPROVED").length || 0;
 
       const conversionRate = totalSales > 0 ? (approvedSales / totalSales) * 100 : 0;
       const averageTicket = approvedSales > 0 ? totalRevenue / approvedSales : 0;
@@ -260,9 +246,7 @@ class HotmartAPIClient {
         totalRevenue,
         conversionRate: conversionRate.toFixed(2),
         averageTicket: averageTicket.toFixed(2),
-        refundedSales: sales.items?.filter((sale: any) =>
-          sale.purchase?.status === "REFUNDED"
-        ).length || 0,
+        refundedSales: sales.items?.filter((sale: any) => sale.purchase?.status === "REFUNDED").length || 0,
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {

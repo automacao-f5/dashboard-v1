@@ -64,37 +64,33 @@ export function CampaignDetailsCard({ campaign }: CampaignDetailsProps) {
         {/* Informações Básicas */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex items-center gap-2">
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="text-muted-foreground h-4 w-4" />
             <div>
               <p className="text-sm font-medium">Objetivo</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {campaign.objective === "OUTCOME_SALES" ? "Vendas" : campaign.objective}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="text-muted-foreground h-4 w-4" />
             <div>
               <p className="text-sm font-medium">Orçamento Diário</p>
-              <p className="text-sm text-muted-foreground">
-                {formatBudget(campaign.daily_budget)}
-              </p>
+              <p className="text-muted-foreground text-sm">{formatBudget(campaign.daily_budget)}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="text-muted-foreground h-4 w-4" />
             <div>
               <p className="text-sm font-medium">Data de Início</p>
-              <p className="text-sm text-muted-foreground">
-                {formatDate(campaign.start_time)}
-              </p>
+              <p className="text-muted-foreground text-sm">{formatDate(campaign.start_time)}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="text-muted-foreground h-4 w-4" />
             <div>
               <p className="text-sm font-medium">ROAS</p>
-              <p className="text-sm text-muted-foreground">{detailedInsights.roas}</p>
+              <p className="text-muted-foreground text-sm">{detailedInsights.roas}</p>
             </div>
           </div>
         </div>
@@ -104,15 +100,15 @@ export function CampaignDetailsCard({ campaign }: CampaignDetailsProps) {
           <h3 className="mb-3 text-sm font-semibold">Alcance e Engajamento</h3>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Alcance</p>
+              <p className="text-muted-foreground text-sm">Alcance</p>
               <p className="text-2xl font-bold">{detailedInsights.reach}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Frequência</p>
+              <p className="text-muted-foreground text-sm">Frequência</p>
               <p className="text-2xl font-bold">{detailedInsights.frequency}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Impressões</p>
+              <p className="text-muted-foreground text-sm">Impressões</p>
               <p className="text-2xl font-bold">{detailedInsights.impressions}</p>
             </div>
           </div>
@@ -123,19 +119,19 @@ export function CampaignDetailsCard({ campaign }: CampaignDetailsProps) {
           <h3 className="mb-3 text-sm font-semibold">Cliques e Conversões</h3>
           <div className="grid gap-4 md:grid-cols-4">
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Cliques</p>
+              <p className="text-muted-foreground text-sm">Cliques</p>
               <p className="text-2xl font-bold">{detailedInsights.clicks}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">CTR</p>
+              <p className="text-muted-foreground text-sm">CTR</p>
               <p className="text-2xl font-bold">{detailedInsights.ctr}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Conversões</p>
+              <p className="text-muted-foreground text-sm">Conversões</p>
               <p className="text-2xl font-bold">{detailedInsights.conversions}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Custo/Conv.</p>
+              <p className="text-muted-foreground text-sm">Custo/Conv.</p>
               <p className="text-2xl font-bold">{detailedInsights.costPerConversion}</p>
             </div>
           </div>
@@ -146,11 +142,11 @@ export function CampaignDetailsCard({ campaign }: CampaignDetailsProps) {
           <h3 className="mb-3 text-sm font-semibold">Investimento</h3>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">Gasto Total</p>
+              <p className="text-muted-foreground text-sm">Gasto Total</p>
               <p className="text-2xl font-bold">{detailedInsights.spend}</p>
             </div>
             <div className="rounded-lg border p-3">
-              <p className="text-sm text-muted-foreground">CPC Médio</p>
+              <p className="text-muted-foreground text-sm">CPC Médio</p>
               <p className="text-2xl font-bold">{detailedInsights.cpc}</p>
             </div>
           </div>

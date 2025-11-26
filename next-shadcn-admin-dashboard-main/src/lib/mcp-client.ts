@@ -1,6 +1,6 @@
 /**
  * Cliente para comunicação com a Meta Marketing API
- * 
+ *
  * Este cliente faz chamadas HTTP diretas à API do Meta para buscar dados em tempo real.
  * As credenciais são obtidas das variáveis de ambiente.
  */
@@ -21,14 +21,10 @@ if (!META_AD_ACCOUNT_ID) {
 /**
  * Faz chamadas diretas à API do Meta para buscar dados em tempo real
  */
-export async function callMCPTool(
-  serverName: string,
-  toolName: string,
-  args: Record<string, any>
-): Promise<any> {
+export async function callMCPTool(serverName: string, toolName: string, args: Record<string, any>): Promise<any> {
   try {
     console.log(`[MCP Client] Calling ${serverName}/${toolName}`, args);
-    
+
     if (serverName === "meta-marketing" && toolName === "get_campaigns") {
       // Busca campanhas em tempo real da API do Meta
       const limit = args?.limit || 50;
@@ -36,20 +32,18 @@ export async function callMCPTool(
 
       const url = `${META_API_BASE_URL}/${META_AD_ACCOUNT_ID}/campaigns`;
       const params = new URLSearchParams({
-        access_token: META_ACCESS_TOKEN,
+        access_token: META_ACCESS_TOKEN || "",
         fields: "id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time",
         limit: limit.toString(),
       });
 
       if (status) {
-        params.append("filtering", JSON.stringify([
-          { field: "status", operator: "IN", value: [status] }
-        ]));
+        params.append("filtering", JSON.stringify([{ field: "status", operator: "IN", value: [status] }]));
       }
 
       console.log("[MCP Client] Fetching campaigns from Meta API...");
       const response = await fetch(`${url}?${params.toString()}`);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("[MCP Client] Meta API error:", response.status, errorText);
@@ -73,14 +67,14 @@ export async function callMCPTool(
 
       const url = `${META_API_BASE_URL}/${campaignId}/insights`;
       const params = new URLSearchParams({
-        access_token: META_ACCESS_TOKEN,
+        access_token: META_ACCESS_TOKEN || "",
         fields: "impressions,clicks,spend,reach,cpc,cpm,ctr",
         date_preset: datePreset,
       });
 
       console.log(`[MCP Client] Fetching insights for campaign ${campaignId}...`);
       const response = await fetch(`${url}?${params.toString()}`);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("[MCP Client] Meta API error:", response.status, errorText);

@@ -51,11 +51,7 @@ export function CampaignPerformanceChart() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{metric.value}</div>
-            <p
-              className={`text-xs ${
-                metric.trend === "up" ? "text-green-600" : "text-red-600"
-              }`}
-            >
+            <p className={`text-xs ${metric.trend === "up" ? "text-green-600" : "text-red-600"}`}>
               {metric.change > 0 ? "+" : ""}
               {metric.change}% vs. período anterior
             </p>

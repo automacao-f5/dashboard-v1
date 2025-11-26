@@ -27,10 +27,7 @@ interface MetaDashboardClientProps {
   initialInsights: any;
 }
 
-export function MetaDashboardClient({
-  initialCampaigns,
-  initialInsights,
-}: MetaDashboardClientProps) {
+export function MetaDashboardClient({ initialCampaigns, initialInsights }: MetaDashboardClientProps) {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: addDays(new Date(), -6),
     to: new Date(),
@@ -86,9 +83,7 @@ export function MetaDashboardClient({
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Meta Marketing</h1>
-          <p className="text-muted-foreground">
-            Gerencie suas campanhas e produtos do Facebook e Instagram
-          </p>
+          <p className="text-muted-foreground">Gerencie suas campanhas e produtos do Facebook e Instagram</p>
         </div>
         <DateRangePicker date={dateRange} onDateChange={handleDateChange} />
       </div>
@@ -102,7 +97,7 @@ export function MetaDashboardClient({
                 <Skeleton className="h-4 w-4" />
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-[120px] mb-2" />
+                <Skeleton className="mb-2 h-8 w-[120px]" />
                 <Skeleton className="h-3 w-[80px]" />
               </CardContent>
             </Card>
@@ -173,7 +168,6 @@ export function MetaDashboardClient({
           )}
         </TabsContent>
       </Tabs>
-
     </div>
   );
 }

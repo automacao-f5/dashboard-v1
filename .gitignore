@@ -55,3 +55,4 @@ coverage/
 # Cache
 .cache/
 *.cache
+gen-lang-client-0900169805-c2d565b2468a.json

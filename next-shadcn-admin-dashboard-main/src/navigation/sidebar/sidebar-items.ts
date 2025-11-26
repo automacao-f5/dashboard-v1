@@ -16,6 +16,7 @@ import {
   Gauge,
   GraduationCap,
   Share2,
+  Filter,
   type LucideIcon,
 } from "lucide-react";
 
@@ -68,6 +69,12 @@ export const sidebarItems: NavGroup[] = [
         title: "Meta Marketing",
         url: "/dashboard/meta",
         icon: Share2,
+        isNew: true,
+      },
+      {
+        title: "Funil de Vendas",
+        url: "/dashboard/funnel",
+        icon: Filter,
         isNew: true,
       },
       {

@@ -39,9 +39,7 @@ class MetaAPIClient {
       };
 
       if (status) {
-        params.filtering = JSON.stringify([
-          { field: "status", operator: "IN", value: [status] },
-        ]);
+        params.filtering = JSON.stringify([{ field: "status", operator: "IN", value: [status] }]);
       }
 
       const response = await this.client.get(`/${this.adAccountId}/campaigns`, {
@@ -54,8 +52,7 @@ class MetaAPIClient {
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
+        const errorMessage = error.response?.data?.error?.message || error.message;
         throw new Error(`Meta API Error: ${errorMessage}`);
       }
       throw error;
@@ -77,8 +74,7 @@ class MetaAPIClient {
       return response.data.data?.[0] || {};
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
+        const errorMessage = error.response?.data?.error?.message || error.message;
         console.error(`Error fetching insights for campaign ${campaignId}:`, errorMessage);
         return {};
       }
@@ -89,15 +85,11 @@ class MetaAPIClient {
   /**
    * Buscar insights com breakdown diário para gráficos de tendência
    */
-  async getCampaignInsightsBreakdown(
-    campaignId: string,
-    datePreset: string = "last_7d"
-  ) {
+  async getCampaignInsightsBreakdown(campaignId: string, datePreset: string = "last_7d") {
     try {
       const response = await this.client.get(`/${campaignId}/insights`, {
         params: {
-          fields:
-            "impressions,clicks,spend,reach,cpc,cpm,ctr,date_start,date_stop",
+          fields: "impressions,clicks,spend,reach,cpc,cpm,ctr,date_start,date_stop",
           date_preset: datePreset,
           time_increment: 1, // Breakdown diário
         },
@@ -106,12 +98,8 @@ class MetaAPIClient {
       return response.data.data || [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
-        console.error(
-          `Error fetching breakdown for campaign ${campaignId}:`,
-          errorMessage
-        );
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        console.error(`Error fetching breakdown for campaign ${campaignId}:`, errorMessage);
         return [];
       }
       throw error;
@@ -136,8 +124,7 @@ class MetaAPIClient {
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
+        const errorMessage = error.response?.data?.error?.message || error.message;
         throw new Error(`Meta API Error: ${errorMessage}`);
       }
       throw error;
@@ -158,8 +145,7 @@ class MetaAPIClient {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
+        const errorMessage = error.response?.data?.error?.message || error.message;
         throw new Error(`Meta API Error: ${errorMessage}`);
       }
       throw error;
@@ -169,10 +155,7 @@ class MetaAPIClient {
   /**
    * Buscar insights demográficos de uma campanha (idade e gênero)
    */
-  async getCampaignDemographics(
-    campaignId: string,
-    datePreset: string = "last_30d"
-  ) {
+  async getCampaignDemographics(campaignId: string, datePreset: string = "last_30d") {
     try {
       // Buscar breakdown por idade e gênero
       const response = await this.client.get(`/${campaignId}/insights`, {
@@ -186,12 +169,8 @@ class MetaAPIClient {
       return response.data.data || [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
-        console.error(
-          `Error fetching demographics for campaign ${campaignId}:`,
-          errorMessage
-        );
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        console.error(`Error fetching demographics for campaign ${campaignId}:`, errorMessage);
         return [];
       }
       throw error;
@@ -201,10 +180,7 @@ class MetaAPIClient {
   /**
    * Buscar insights geográficos de uma campanha
    */
-  async getCampaignGeographics(
-    campaignId: string,
-    datePreset: string = "last_30d"
-  ) {
+  async getCampaignGeographics(campaignId: string, datePreset: string = "last_30d") {
     try {
       // Buscar breakdown por país e região
       const response = await this.client.get(`/${campaignId}/insights`, {
@@ -218,12 +194,8 @@ class MetaAPIClient {
       return response.data.data || [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
-        console.error(
-          `Error fetching geographics for campaign ${campaignId}:`,
-          errorMessage
-        );
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        console.error(`Error fetching geographics for campaign ${campaignId}:`, errorMessage);
         return [];
       }
       throw error;
@@ -233,10 +205,7 @@ class MetaAPIClient {
   /**
    * Buscar insights por dispositivo
    */
-  async getCampaignDeviceBreakdown(
-    campaignId: string,
-    datePreset: string = "last_30d"
-  ) {
+  async getCampaignDeviceBreakdown(campaignId: string, datePreset: string = "last_30d") {
     try {
       const response = await this.client.get(`/${campaignId}/insights`, {
         params: {
@@ -249,12 +218,8 @@ class MetaAPIClient {
       return response.data.data || [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
-        console.error(
-          `Error fetching device breakdown for campaign ${campaignId}:`,
-          errorMessage
-        );
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        console.error(`Error fetching device breakdown for campaign ${campaignId}:`, errorMessage);
         return [];
       }
       throw error;
@@ -264,10 +229,7 @@ class MetaAPIClient {
   /**
    * Buscar insights por plataforma (Facebook, Instagram, etc.)
    */
-  async getCampaignPlatformBreakdown(
-    campaignId: string,
-    datePreset: string = "last_30d"
-  ) {
+  async getCampaignPlatformBreakdown(campaignId: string, datePreset: string = "last_30d") {
     try {
       const response = await this.client.get(`/${campaignId}/insights`, {
         params: {
@@ -280,12 +242,8 @@ class MetaAPIClient {
       return response.data.data || [];
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.error?.message || error.message;
-        console.error(
-          `Error fetching platform breakdown for campaign ${campaignId}:`,
-          errorMessage
-        );
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        console.error(`Error fetching platform breakdown for campaign ${campaignId}:`, errorMessage);
         return [];
       }
       throw error;

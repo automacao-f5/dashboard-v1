@@ -98,14 +98,12 @@ export function HeroMetrics({ data }: HeroMetricsProps) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{metric.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">{metric.description}</p>
-              <div className="flex items-center gap-1 mt-2">
+              <p className="text-muted-foreground mt-1 text-xs">{metric.description}</p>
+              <div className="mt-2 flex items-center gap-1">
                 {metric.trend !== "neutral" && (
-                  <TrendIcon
-                    className={`h-3 w-3 ${metric.trend === "up" ? "text-green-600" : "text-red-600"}`}
-                  />
+                  <TrendIcon className={`h-3 w-3 ${metric.trend === "up" ? "text-green-600" : "text-red-600"}`} />
                 )}
-                <span className="text-xs text-muted-foreground">{metric.trendValue}</span>
+                <span className="text-muted-foreground text-xs">{metric.trendValue}</span>
               </div>
             </CardContent>
           </Card>
