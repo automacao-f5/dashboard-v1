@@ -1,0 +1,448 @@
+{
+  "name": "Consultoria Projeto Cirurgião - Equipe Hierárquica",
+  "nodes": [
+    {
+      "id": "chat-trigger",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [240, 300],
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "authentication": "none",
+        "options": {
+          "title": "Consultoria Projeto Cirurgião 🏥",
+          "subtitle": "Equipe Completa de Especialistas - Simulação de Consultoria",
+          "inputPlaceholder": "Digite sua pergunta ou solicitação...",
+          "showWelcomeScreen": true,
+          "welcomeMessage": "Bem-vindo à Consultoria do Projeto Cirurgião! 👋\n\nNossa equipe hierárquica está pronta para ajudar:\n\n🎯 **Nível 1:** Product Owner (Ana Paula)\n👨‍💼 **Nível 2:** Tech Lead (Ricardo)\n⚙️ **Nível 3:** Backend Senior, DevOps\n\nComo posso ajudá-lo hoje?"
+        }
+      }
+    },
+    {
+      "id": "agent-product-owner",
+      "name": "Agent: Product Owner (Ana Paula)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [480, 300],
+      "parameters": {
+        "promptType": "auto",
+        "text": "={{ $json.chatInput }}",
+        "hasOutputParser": false,
+        "options": {
+          "systemMessage": "Como Product Owner sênior especializada em produtos educacionais, você é responsável pela visão de produto, estratégia, roadmap e priorização do Projeto Cirurgião.\n\nSeu objetivo é maximizar o valor do produto através de decisões estratégicas baseadas em dados, gestão eficaz de backlog e alinhamento com stakeholders.\n\n**IMPORTANTE - Delegação:**\n- Se a pergunta for sobre PRODUTO, ESTRATÉGIA, PRIORIZAÇÃO, ROADMAP, USER STORIES → Responda diretamente\n- Se a pergunta for TÉCNICA (arquitetura, código, infraestrutura) → Use a ferramenta 'tech_lead_agent' para delegar ao Tech Lead\n\n**Seu estilo de resposta:**\n- Profissional e orientado a dados\n- Focado em valor de negócio\n- Usa frameworks de priorização (RICE, MoSCoW)\n- Sempre contextualiza decisões com KPIs\n\nFerramentas: Jira/Linear, Figma, Mixpanel, Google Analytics, Miro, Notion, Amplitude."
+        }
+      }
+    },
+    {
+      "id": "bedrock-model-po",
+      "name": "AWS Bedrock: PO Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [480, 480],
+      "parameters": {
+        "modelSource": "inferenceProfile",
+        "model": {
+          "mode": "list",
+          "value": "us.anthropic.claude-sonnet-4-5-v2:0"
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4096
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "aws-credentials",
+          "name": "AWS Account"
+        }
+      }
+    },
+    {
+      "id": "qdrant-kb-po",
+      "name": "Qdrant KB: Product Owner",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [480, 660],
+      "parameters": {
+        "mode": "retrieve",
+        "qdrantCollection": {
+          "mode": "list",
+          "value": "agentes_cirurgiao"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "agente",
+                "value": "product_owner"
+              }
+            ]
+          }
+        },
+        "topK": 5
+      },
+      "credentials": {
+        "qdrantApi": {
+          "id": "qdrant-credentials",
+          "name": "Qdrant Self-Hosted"
+        }
+      }
+    },
+    {
+      "id": "tool-tech-lead",
+      "name": "Tool: Tech Lead Agent",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [700, 200],
+      "parameters": {
+        "toolDescription": "Consulta o Tech Lead (Ricardo) para questões técnicas, arquiteturais ou de implementação. Use quando a pergunta envolver: arquitetura de sistema, decisões tecnológicas, estimativas técnicas, coordenação de desenvolvimento, stack tecnológico, performance, escalabilidade, ou qualquer questão que necessite expertise técnica profunda.",
+        "text": "={{ $json.query }}",
+        "hasOutputParser": false,
+        "options": {
+          "systemMessage": "Como Tech Lead e Arquiteto de Software com 11+ anos de experiência, você é responsável pela visão técnica, arquitetura e liderança da equipe de desenvolvimento do Projeto Cirurgião.\n\nSeu objetivo é definir a arquitetura técnica, liderar a equipe, tomar decisões tecnológicas críticas e garantir qualidade e escalabilidade.\n\n**IMPORTANTE - Delegação:**\n- Se a pergunta for sobre BACKEND, APIs, Database → Use 'backend_senior_agent'\n- Se a pergunta for sobre INFRAESTRUTURA, CI/CD, DevOps → Use 'devops_agent'\n- Se for questão geral de arquitetura ou múltiplas áreas → Responda você mesmo e/ou consulte especialistas\n\n**Seu estilo:**\n- Decisões equilibradas: qualidade, performance, custo e time-to-market\n- Baseado em padrões de arquitetura (Clean Architecture, DDD)\n- Sempre considera impacto em todas plataformas (iOS, Android, Web, Backend)\n\nTecnologias: AWS, Cloudflare, Node.js, PostgreSQL, Swift, Kotlin, Next.js, Docker, Terraform."
+        }
+      }
+    },
+    {
+      "id": "bedrock-model-tech-lead",
+      "name": "AWS Bedrock: Tech Lead Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [700, 380],
+      "parameters": {
+        "modelSource": "inferenceProfile",
+        "model": {
+          "mode": "list",
+          "value": "us.anthropic.claude-sonnet-4-5-v2:0"
+        },
+        "options": {
+          "temperature": 0.6,
+          "maxTokens": 4096
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "aws-credentials",
+          "name": "AWS Account"
+        }
+      }
+    },
+    {
+      "id": "qdrant-kb-tech-lead",
+      "name": "Qdrant KB: Tech Lead",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [700, 560],
+      "parameters": {
+        "mode": "retrieve",
+        "qdrantCollection": {
+          "mode": "list",
+          "value": "agentes_cirurgiao"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "agente",
+                "value": "tech_lead"
+              }
+            ]
+          }
+        },
+        "topK": 5
+      },
+      "credentials": {
+        "qdrantApi": {
+          "id": "qdrant-credentials",
+          "name": "Qdrant Self-Hosted"
+        }
+      }
+    },
+    {
+      "id": "tool-backend-senior",
+      "name": "Tool: Backend Senior Agent",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [920, 100],
+      "parameters": {
+        "toolDescription": "Consulta o Backend Senior (Rafael) para questões de backend, APIs, database ou arquitetura de servidor. Use para: design de APIs RESTful, modelagem de banco de dados PostgreSQL, otimização de queries, integração com Cloudflare R2/Stream, implementação de autenticação JWT, Node.js/TypeScript, ou qualquer questão relacionada ao desenvolvimento backend.",
+        "text": "={{ $json.query }}",
+        "hasOutputParser": false,
+        "options": {
+          "systemMessage": "Como Desenvolvedor Backend Sênior especializado em Node.js e arquitetura de sistemas educacionais, você é fundamental na construção da infraestrutura robusta e escalável do Projeto Cirurgião.\n\nSeu objetivo é desenvolver e manter toda a camada backend garantindo performance, segurança e escalabilidade.\n\nUtilize seu conhecimento em Node.js, TypeScript, PostgreSQL, Redis e Cloudflare (R2, Stream) para arquitetar e implementar APIs robustas. Aplique Clean Architecture e SOLID.\n\n**Seu estilo:**\n- Código limpo e bem documentado\n- APIs RESTful seguindo best practices\n- Foco em performance e otimização de queries\n- Segurança em primeiro lugar (JWT, validação, sanitização)\n\nTecnologias: Node.js, TypeScript, Express, PostgreSQL, Prisma ORM, Redis, Cloudflare R2/Stream, JWT, Jest."
+        }
+      }
+    },
+    {
+      "id": "bedrock-model-backend",
+      "name": "AWS Bedrock: Backend Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [920, 280],
+      "parameters": {
+        "modelSource": "inferenceProfile",
+        "model": {
+          "mode": "list",
+          "value": "us.anthropic.claude-sonnet-4-5-v2:0"
+        },
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 4096
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "aws-credentials",
+          "name": "AWS Account"
+        }
+      }
+    },
+    {
+      "id": "qdrant-kb-backend",
+      "name": "Qdrant KB: Backend Senior",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [920, 460],
+      "parameters": {
+        "mode": "retrieve",
+        "qdrantCollection": {
+          "mode": "list",
+          "value": "agentes_cirurgiao"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "agente",
+                "value": "backend_senior"
+              }
+            ]
+          }
+        },
+        "topK": 5
+      },
+      "credentials": {
+        "qdrantApi": {
+          "id": "qdrant-credentials",
+          "name": "Qdrant Self-Hosted"
+        }
+      }
+    },
+    {
+      "id": "tool-devops",
+      "name": "Tool: DevOps Agent",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [920, 620],
+      "parameters": {
+        "toolDescription": "Consulta DevOps (Carolina) para questões de infraestrutura, CI/CD, deploy ou cloud. Use para: configuração de AWS/Cloudflare, pipelines de CI/CD, Docker/containers, Terraform (IaC), monitoramento com Grafana/CloudWatch, gestão de backups, segurança de infraestrutura, otimização de custos cloud, ou troubleshooting de problemas de infraestrutura.",
+        "text": "={{ $json.query }}",
+        "hasOutputParser": false,
+        "options": {
+          "systemMessage": "Como Engenheira DevOps especializada em AWS e Cloudflare, você é responsável por toda infraestrutura, automação e confiabilidade do Projeto Cirurgião.\n\nSeu objetivo é construir e manter infraestrutura cloud robusta, automatizar processos de deploy e garantir confiabilidade do sistema.\n\nUtilize seu conhecimento em AWS (EC2, RDS, S3, CloudFront), Cloudflare (R2, Stream, Workers), Docker, GitHub Actions e Terraform para criar IaC reproduzível e escalável.\n\n**Seu estilo:**\n- Infraestrutura como código (IaC)\n- Automação completa de CI/CD\n- Monitoramento proativo e alertas\n- Segurança e compliance\n- Otimização de custos\n\nMetas: uptime >99.9%, deploy <15min, custos otimizados.\n\nTecnologias: AWS, Cloudflare, Docker, GitHub Actions, Terraform, Nginx, PostgreSQL, Redis, Grafana, CloudWatch."
+        }
+      }
+    },
+    {
+      "id": "bedrock-model-devops",
+      "name": "AWS Bedrock: DevOps Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [920, 800],
+      "parameters": {
+        "modelSource": "inferenceProfile",
+        "model": {
+          "mode": "list",
+          "value": "us.anthropic.claude-sonnet-4-5-v2:0"
+        },
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 4096
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "aws-credentials",
+          "name": "AWS Account"
+        }
+      }
+    },
+    {
+      "id": "qdrant-kb-devops",
+      "name": "Qdrant KB: DevOps",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [920, 980],
+      "parameters": {
+        "mode": "retrieve",
+        "qdrantCollection": {
+          "mode": "list",
+          "value": "agentes_cirurgiao"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "agente",
+                "value": "devops"
+              }
+            ]
+          }
+        },
+        "topK": 5
+      },
+      "credentials": {
+        "qdrantApi": {
+          "id": "qdrant-credentials",
+          "name": "Qdrant Self-Hosted"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "chat-trigger": {
+      "main": [
+        [
+          {
+            "node": "agent-product-owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agent-product-owner": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "bedrock-model-po",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "qdrant-kb-po",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "tool-tech-lead",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool-tech-lead": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "bedrock-model-tech-lead",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "qdrant-kb-tech-lead",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool": [
+        [
+          {
+            "node": "tool-backend-senior",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "tool-devops",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool-backend-senior": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "bedrock-model-backend",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "qdrant-kb-backend",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool-devops": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "bedrock-model-devops",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_memory": [
+        [
+          {
+            "node": "qdrant-kb-devops",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "AI Agents",
+      "id": "ai-agents"
+    },
+    {
+      "name": "Consultoria",
+      "id": "consultoria"
+    },
+    {
+      "name": "Hierarquia",
+      "id": "hierarquia"
+    }
+  ],
+  "meta": {
+    "instanceId": "self-hosted"
+  },
+  "pinData": {},
+  "versionId": "2.0.0"
+}
